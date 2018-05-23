@@ -1,0 +1,1213 @@
+{#<!DOCTYPE html>#}
+{#<html>#}
+{#<head>#}
+{#    <meta http-equiv=Content-Type content="text/html; charset=UTF-8"><title>政咨汇数据采集展示</title>#}
+{#    <meta name=Keywords content=Gerapy><meta name=Description content=Gerapy><meta name=renderer content=webkit>#}
+{#    <meta http-equiv=X-UA-Compatible content="IE=Edge,chrome=1">#}
+{#    <link rel="shortcut icon" href=/favicon.ico>#}
+{#    <link href=/static/css/e35e8a8a.css rel=stylesheet>#}
+{#    <script type="text/javascript" src="../static/js/echarts.js"></script>#}
+{#    <script type="text/javascript" src="http://apps.bdimg.com/libs/jquery/1.11.1/jquery.min.js"></script>#}
+{##}
+{#</head>#}
+{#<body>#}
+{#<mainbody></mainbody>#}
+{#<script type=text/javascript src=/static/js/4381eaa1.js></script>#}
+{#<script type=text/javascript src=/static/js/e5ed2852.js></script>#}
+{#<script type=text/javascript src=/static/js/57be2686.js></script>#}
+{#<div id="chartMap" style="width:800px; height: 500px;"></div>#}
+{#<div id="chartmain" style="width:800px; height: 400px;"></div>#}
+{#<div id="chartqueue" style="width:800px; height: 400px;"></div>#}
+{#<div id="chartspider" style="width:800px; height: 400px;"></div>#}
+{#<div id="chartma" style="width:1024px; height: 400px;"></div>#}
+{#<div id="chart" style="width:1000px; height: 400px;"></div>#}
+{##}
+{##}
+{#<script>#}
+{#    // 按小时#}
+{#    $.ajax({#}
+{#       url: 'http://192.168.5.66:8000/api/monitor/monitorDay/',#}
+{#    data:'{"startDay":"2018-05-04","hour":"14"}',#}
+{#    type: "POST",#}
+{#    dataType:'json',#}
+{#     success:function(data){#}
+{#           console.log(data);#}
+{#      var item_total = data.item_total;#}
+{#      var item_avail = data.item_avail;#}
+{#      var item_invalid = data.item_invalid;#}
+{#      var item_avail_increased = data.item_avail_increased;#}
+{#      var total_queue_url = data.total_queue_url;#}
+{#      var  success_queue_url = data.success_queue_url;#}
+{#      var  fail_queue_url = data.fail_queue_url;#}
+{#      var  status_403_queue_url = data.status_403_queue_url;#}
+{#      var  status_404_queue_url = data.status_404_queue_url;#}
+{#      var  status_50x_queue_url = data.status_50x_queue_url;#}
+{#      var  status_other_queue_url = data.status_other_queue_url;#}
+{#      var  total_url = data.total_url;#}
+{#      var  success_url = data.success_url;#}
+{#      var  fail_url = data.fail_url;#}
+{#      var  status_403_url = data.status_403_url;#}
+{#      var  status_404_url = data.status_404_url;#}
+{#      var  status_50x_url = data.status_50x_url;#}
+{#      var  status_other_url = data.status_other_url;#}
+{#      var h = 9; //{0，,23}#}
+{#     var option = {#}
+{#    title : {#}
+{#        text: '采集数据展示',#}
+{#        subtext: '政咨汇',#}
+{#        x:'center'#}
+{#    },#}
+{#    tooltip : {#}
+{#        trigger: 'item',#}
+{#        formatter: "{a} <br/>{b} : {c} ({d}%)"#}
+{#    },#}
+{#    legend: {#}
+{#        orient: 'vertical',#}
+{#        left: 'right',#}
+{#        data: ['总数','资金类','非资金类','有效增加','队列URL总数','成功URL总数','失败URL总数','403数量','404数量','50x数量' ,#}
+{#        '其他数量','url总数','成功url总数','失败url总数','403数量','404数量','50x数量','其他数量'#}
+{#        ]#}
+{#    },#}
+{#    series : [#}
+{#        {#}
+{#            name: '采集数据统计',#}
+{#            type: 'pie',#}
+{#            radius : '50%',#}
+{#            center: ['15%', '50%'],#}
+{#            data:[#}
+{#                {value:item_total[h], name:'总数'},#}
+{#                {value:item_avail[h], name:'资金类'},#}
+{#                {value:item_invalid[h], name:'非资金类'},#}
+{#                {value:item_avail_increased[h], name:'有效增加'}#}
+{#            ],#}
+{#            itemStyle: {#}
+{#                emphasis: {#}
+{#                    shadowBlur: 10,#}
+{#                    shadowOffsetX: 0,#}
+{#                    shadowColor: 'rgba(0, 0, 0, 0.5)'#}
+{#                }#}
+{#            }#}
+{#        },#}
+{#        {#}
+{#            name: 'url数据统计',#}
+{#            type: 'pie',#}
+{#            radius : '50%',#}
+{#            center: ['45%', '50%'],#}
+{#            data:[#}
+{#                {value:total_url[h], name:'url总数'},#}
+{#                {value:success_url[h], name:'成功url数量'},#}
+{#                {value:fail_url[h], name:'失败url数量'},#}
+{#                {value:status_403_url[h], name:'403数量'},#}
+{#                {value:status_404_url[h], name:'403数量'},#}
+{#                {value:status_50x_url[h], name:'403数量'},#}
+{#                {value:status_other_url[h], name:'403数量'}#}
+{#            ],#}
+{#            itemStyle: {#}
+{#                emphasis: {#}
+{#                    shadowBlur: 10,#}
+{#                    shadowOffsetX: 0,#}
+{#                    shadowColor: 'rgba(0, 0, 0, 0.5)'#}
+{#                }#}
+{#            }#}
+{#        },#}
+{#        {#}
+{#            name: '初始URL数据统计',#}
+{#            type: 'pie',#}
+{#            radius : '50%',#}
+{#            center: ['75%', '50%'],#}
+{#            data:[#}
+{#                {value:total_queue_url[h], name:'队列URL总数'},#}
+{#                {value:success_queue_url[h], name:'成功URL总数'},#}
+{#                {value:fail_queue_url[h], name:'失败URL总数'},#}
+{#                {value:status_403_queue_url[h], name:'403数量'},#}
+{#                {value:status_404_queue_url[h], name:'404数量'},#}
+{#                {value:status_50x_queue_url[h], name:'50x数量'},#}
+{#                {value:status_other_queue_url[h], name:'其他数量'}#}
+{#            ],#}
+{#            itemStyle: {#}
+{#                emphasis: {#}
+{#                    shadowBlur: 10,#}
+{#                    shadowOffsetX: 0,#}
+{#                    shadowColor: 'rgba(0, 0, 0, 0.5)'#}
+{#                }#}
+{#            }#}
+{#        }#}
+{#    ]#}
+{#};#}
+{##}
+{##}
+{#      //初始化echarts实例#}
+{#        var myChart = echarts.init(document.getElementById('chartMap'));#}
+{##}
+{#        //使用制定的配置项和数据显示图表#}
+{#        myChart.setOption(option);#}
+{#    },#}
+{#       error:function(er){#}
+{#          //alert("11");#}
+{#           BackErr(er);#}
+{#     }#}
+{#    });#}
+{##}
+{#</script>#}
+{##}
+{##}
+{#<script>#}
+{#    // 按小时#}
+{#    $.ajax({#}
+{#       url: 'http://192.168.5.66:8000/api/monitor/monitorDay/',#}
+{#    data:'{"startDay":"2018-05-04","hour":"13"}',#}
+{#    type: "POST",#}
+{#    dataType:'json',#}
+{#     success:function(data){#}
+{#           console.log(data);#}
+{#      var item_total = data.item_total;#}
+{#      var item_avail = data.item_avail;#}
+{#      var item_invalid = data.item_invalid;#}
+{#      var item_avail_increased = data.item_avail_increased;#}
+{##}
+{#      var legenddata=['总数','资金类','非资金类','有效增加'];#}
+{#      var  option = {#}
+{#        tooltip : {#}
+{#            trigger: 'axis'#}
+{#        },#}
+{#        legend: {#}
+{#            data:legenddata#}
+{#        },#}
+{#        toolbox: {#}
+{#            show : true,#}
+{#            feature : {#}
+{#                mark : {show: true},#}
+{#                dataView : {show: true, readOnly: false},#}
+{#                magicType : {show: true, type: ['line', 'bar', 'stack', 'tiled']},#}
+{#                restore : {show: true},#}
+{#                saveAsImage : {show: true}#}
+{#            }#}
+{#        },#}
+{#        calculable : true,#}
+{#        xAxis : [#}
+{#            {#}
+{#                type : 'category',#}
+{#                boundaryGap : false,#}
+{#                data : ['00:00','01:00','02:00','03:00','04:00','05:00','06:00','07:00','08:00','09:00','10:00',#}
+{#                        '11:00','12:00','13:00','14:00','15:00','16:00','17:00','18:00','19:00','20:00','21:00','22:00',#}
+{#                        '23:00']#}
+{#            }#}
+{#        ],#}
+{#        yAxis : [#}
+{#            {#}
+{#                type : 'value'#}
+{#            }#}
+{#        ],#}
+{#        series : [#}
+{#            {#}
+{#                name:'总数',#}
+{#                type:'line',#}
+{#                stack: '总量',#}
+{#                data:item_total#}
+{#            },#}
+{#            {#}
+{#                name:'资金类',#}
+{#                type:'line',#}
+{#                stack: '总量',#}
+{#                data:item_avail#}
+{#            },#}
+{#            {#}
+{#                name:'非资金类',#}
+{#                type:'line',#}
+{#                stack: '总量',#}
+{#                data:item_invalid#}
+{#            },#}
+{#            {#}
+{#                name: '有效增加',#}
+{#                type: 'line',#}
+{#                stack: '总量',#}
+{#                data: item_avail_increased#}
+{#            }#}
+{##}
+{#        ]#}
+{##}
+{#    };#}
+{#      //初始化echarts实例#}
+{#        var myChart = echarts.init(document.getElementById('chartmain'));#}
+{##}
+{#        //使用制定的配置项和数据显示图表#}
+{#        myChart.setOption(option);#}
+{#    },#}
+{#       error:function(er){#}
+{#          //alert("11");#}
+{#           BackErr(er);#}
+{#     }#}
+{#    });#}
+{##}
+{#</script>#}
+{##}
+{##}
+{##}
+{##}
+{#<script>#}
+{#    //#}
+{#    $.ajax({#}
+{#       url: 'http://127.0.0.1:8000/api/monitor/monitorWeek/',#}
+{#    data:'{"year":"2018","month":"4","day":"25"}',#}
+{#    type: "POST",#}
+{#    dataType:'json',#}
+{#     success:function(data){#}
+{#           console.log(data);#}
+{#      var item_total = data.item_total;#}
+{#      var item_avail = data.item_avail;#}
+{#      var item_invalid = data.item_invalid;#}
+{#      var item_avail_increased = data.item_avail_increased;#}
+{#      var total_queue_url = data.total_queue_url;#}
+{#      var  success_queue_url = data.success_queue_url;#}
+{#      var  fail_queue_url = data.fail_queue_url;#}
+{#      var  status_403_queue_url = data.status_403_queue_url;#}
+{#      var  status_404_queue_url = data.status_404_queue_url;#}
+{#      var  status_50x_queue_url = data.status_50x_queue_url;#}
+{#      var  status_other_queue_url = data.status_other_queue_url;#}
+{#      var  total_url = total_url;#}
+{#      var  success_url = success_url;#}
+{#      var  fail_url = fail_url;#}
+{#      var  status_403_url = status_403_url;#}
+{#      var  status_404_url = status_404_url;#}
+{#      var  status_50x_url = status_50x_url;#}
+{#      var  status_other_url = status_other_url;#}
+{#      var  option = {#}
+{#        tooltip : {#}
+{#            trigger: 'axis'#}
+{#        },#}
+{#        legend: {#}
+{#            data:['item_total ','item_avail ','item_invalid ','item_avail_increased','total_queue_url','success_queue_url','fail_queue_url',#}
+{#            'status_403_queue_url','status_404_queue_url','status_50x_queue_url']#}
+{#        },#}
+{#        toolbox: {#}
+{#            show : true,#}
+{#            feature : {#}
+{#                mark : {show: true},#}
+{#                dataView : {show: true, readOnly: false},#}
+{#                magicType : {show: true, type: ['line', 'bar', 'stack', 'tiled']},#}
+{#                restore : {show: true},#}
+{#                saveAsImage : {show: true}#}
+{#            }#}
+{#        },#}
+{#        calculable : true,#}
+{#        xAxis : [#}
+{#            {#}
+{#                type : 'category',#}
+{#                boundaryGap : false,#}
+{#                data : ['1','2','3','4','5','6','7','8','9','10','11',#}
+{#                        '12','13','14','15','16','17','18','19','20','21','22','23',#}
+{#                        '24','25','26','27','28','29','30','31']#}
+{#            }#}
+{#        ],#}
+{#        yAxis : [#}
+{#            {#}
+{#                type : 'value'#}
+{#            }#}
+{#        ],#}
+{#        series : [#}
+{#            {#}
+{#                name:'item_total',#}
+{#                type:'line',#}
+{#                stack: '总量',#}
+{#                data:item_total#}
+{#            },#}
+{#            {#}
+{#                name:'item_avail',#}
+{#                type:'line',#}
+{#                stack: '总量',#}
+{#                data:item_avail#}
+{#            },#}
+{#            {#}
+{#                name:'item_invalid',#}
+{#                type:'line',#}
+{#                stack: '总量',#}
+{#                data:item_invalid#}
+{#            },#}
+{#            {#}
+{#                name: 'item_avail_increased',#}
+{#                type: 'line',#}
+{#                stack: '总量',#}
+{#                data: item_avail_increased#}
+{#            },#}
+{#            {#}
+{#                name: 'total_queue_url',#}
+{#                type: 'line',#}
+{#                stack: '总量',#}
+{#                data: total_queue_url#}
+{#            },#}
+{#            {#}
+{#                name: 'success_queue_url',#}
+{#                type: 'line',#}
+{#                stack: '总量',#}
+{#                data: success_queue_url#}
+{#            },#}
+{#            {#}
+{#                name: 'fail_queue_url',#}
+{#                type: 'line',#}
+{#                stack: '总量',#}
+{#                data: fail_queue_url#}
+{#            },#}
+{#            {#}
+{#                name: 'status_403_queue_url',#}
+{#                type: 'line',#}
+{#                stack: '总量',#}
+{#                data: status_403_queue_url#}
+{#            },#}
+{#            {#}
+{#                name: 'status_404_queue_url',#}
+{#                type: 'line',#}
+{#                stack: '总量',#}
+{#                data: status_404_queue_url#}
+{#            },#}
+{#            {#}
+{#                name: 'status_50x_queue_url',#}
+{#                type: 'line',#}
+{#                stack: '总量',#}
+{#                data: status_50x_queue_url#}
+{#            },#}
+{#            {#}
+{#                name: 'status_other_queue_url',#}
+{#                type: 'line',#}
+{#                stack: '总量',#}
+{#                data: status_other_queue_url#}
+{#            },#}
+{#            {#}
+{#                name: 'total_url',#}
+{#                type: 'line',#}
+{#                stack: '总量',#}
+{#                data: total_url#}
+{#            },#}
+{#            {#}
+{#                name: 'success_url',#}
+{#                type: 'line',#}
+{#                stack: '总量',#}
+{#                data: success_url#}
+{#            },#}
+{#            {#}
+{#                name: 'fail_url',#}
+{#                type: 'line',#}
+{#                stack: '总量',#}
+{#                data: fail_url#}
+{#            },#}
+{#            {#}
+{#                name: 'status_403_url',#}
+{#                type: 'line',#}
+{#                stack: '总量',#}
+{#                data: status_403_url#}
+{#            },#}
+{#            {#}
+{#                name: 'status_404_url',#}
+{#                type: 'line',#}
+{#                stack: '总量',#}
+{#                data: status_404_url#}
+{#            },#}
+{#            {#}
+{#                name: 'status_50x_url',#}
+{#                type: 'line',#}
+{#                stack: '总量',#}
+{#                data: status_50x_url#}
+{#            },#}
+{#            {#}
+{#                name: 'status_other_url',#}
+{#                type: 'line',#}
+{#                stack: '总量',#}
+{#                data: status_other_url#}
+{#            }#}
+{#        ]#}
+{##}
+{#    };#}
+{#      //初始化echarts实例#}
+{#        var myChart = echarts.init(document.getElementById('chartma'));#}
+{##}
+{#        //使用制定的配置项和数据显示图表#}
+{#        myChart.setOption(option);#}
+{#    },#}
+{#       error:function(er){#}
+{#          //alert("11");#}
+{#           BackErr(er);#}
+{#     }#}
+{#    });#}
+{##}
+{#</script>#}
+{##}
+{#<script>#}
+{#    // 按月展示#}
+{#    $.ajax({#}
+{#       url: 'http://127.0.0.1:8000/api/monitor/monitorMonth/',#}
+{#    data:'{"year":"2018","month":"4","day":"25"}',#}
+{#    type: "POST",#}
+{#    dataType:'json',#}
+{#     success:function(data){#}
+{#           console.log(data);#}
+{#      var item_total = data.item_total;#}
+{#      var item_avail = data.item_avail;#}
+{#      var item_invalid = data.item_invalid;#}
+{#      var item_avail_increased = data.item_avail_increased;#}
+{#      var total_queue_url = data.total_queue_url;#}
+{#      var  success_queue_url = data.success_queue_url;#}
+{#      var  fail_queue_url = data.fail_queue_url;#}
+{#      var  status_403_queue_url = data.status_403_queue_url;#}
+{#      var  status_404_queue_url = data.status_404_queue_url;#}
+{#      var  status_50x_queue_url = data.status_50x_queue_url;#}
+{#      var  status_other_queue_url = data.status_other_queue_url;#}
+{#      var  total_url = total_url;#}
+{#      var  success_url = success_url;#}
+{#      var  fail_url = fail_url;#}
+{#      var  status_403_url = status_403_url;#}
+{#      var  status_404_url = status_404_url;#}
+{#      var  status_50x_url = status_50x_url;#}
+{#      var  status_other_url = status_other_url;#}
+{#      var  option = {#}
+{#        tooltip : {#}
+{#            trigger: 'axis'#}
+{#        },#}
+{#        legend: {#}
+{#            data:['item_total ','item_avail ','item_invalid ','item_avail_increased','total_queue_url','success_queue_url','fail_queue_url',#}
+{#            'status_403_queue_url','status_404_queue_url','status_50x_queue_url']#}
+{#        },#}
+{#        toolbox: {#}
+{#            show : true,#}
+{#            feature : {#}
+{#                mark : {show: true},#}
+{#                dataView : {show: true, readOnly: false},#}
+{#                magicType : {show: true, type: ['line', 'bar', 'stack', 'tiled']},#}
+{#                restore : {show: true},#}
+{#                saveAsImage : {show: true}#}
+{#            }#}
+{#        },#}
+{#        calculable : true,#}
+{#        xAxis : [#}
+{#            {#}
+{#                type : 'category',#}
+{#                boundaryGap : false,#}
+{#                data : ['1','2','3','4','5','6','7','8','9','10','11',#}
+{#                        '12','13','14','15','16','17','18','19','20','21','22','23',#}
+{#                        '24','25','26','27','28','29','30','31']#}
+{#            }#}
+{#        ],#}
+{#        yAxis : [#}
+{#            {#}
+{#                type : 'value'#}
+{#            }#}
+{#        ],#}
+{#        series : [#}
+{#            {#}
+{#                name:'item_total',#}
+{#                type:'line',#}
+{#                stack: '总量',#}
+{#                data:item_total#}
+{#            },#}
+{#            {#}
+{#                name:'item_avail',#}
+{#                type:'line',#}
+{#                stack: '总量',#}
+{#                data:item_avail#}
+{#            },#}
+{#            {#}
+{#                name:'item_invalid',#}
+{#                type:'line',#}
+{#                stack: '总量',#}
+{#                data:item_invalid#}
+{#            },#}
+{#            {#}
+{#                name: 'item_avail_increased',#}
+{#                type: 'line',#}
+{#                stack: '总量',#}
+{#                data: item_avail_increased#}
+{#            },#}
+{#            {#}
+{#                name: 'total_queue_url',#}
+{#                type: 'line',#}
+{#                stack: '总量',#}
+{#                data: total_queue_url#}
+{#            },#}
+{#            {#}
+{#                name: 'success_queue_url',#}
+{#                type: 'line',#}
+{#                stack: '总量',#}
+{#                data: success_queue_url#}
+{#            },#}
+{#            {#}
+{#                name: 'fail_queue_url',#}
+{#                type: 'line',#}
+{#                stack: '总量',#}
+{#                data: fail_queue_url#}
+{#            },#}
+{#            {#}
+{#                name: 'status_403_queue_url',#}
+{#                type: 'line',#}
+{#                stack: '总量',#}
+{#                data: status_403_queue_url#}
+{#            },#}
+{#            {#}
+{#                name: 'status_404_queue_url',#}
+{#                type: 'line',#}
+{#                stack: '总量',#}
+{#                data: status_404_queue_url#}
+{#            },#}
+{#            {#}
+{#                name: 'status_50x_queue_url',#}
+{#                type: 'line',#}
+{#                stack: '总量',#}
+{#                data: status_50x_queue_url#}
+{#            },#}
+{#            {#}
+{#                name: 'status_other_queue_url',#}
+{#                type: 'line',#}
+{#                stack: '总量',#}
+{#                data: status_other_queue_url#}
+{#            },#}
+{#            {#}
+{#                name: 'total_url',#}
+{#                type: 'line',#}
+{#                stack: '总量',#}
+{#                data: total_url#}
+{#            },#}
+{#            {#}
+{#                name: 'success_url',#}
+{#                type: 'line',#}
+{#                stack: '总量',#}
+{#                data: success_url#}
+{#            },#}
+{#            {#}
+{#                name: 'fail_url',#}
+{#                type: 'line',#}
+{#                stack: '总量',#}
+{#                data: fail_url#}
+{#            },#}
+{#            {#}
+{#                name: 'status_403_url',#}
+{#                type: 'line',#}
+{#                stack: '总量',#}
+{#                data: status_403_url#}
+{#            },#}
+{#            {#}
+{#                name: 'status_404_url',#}
+{#                type: 'line',#}
+{#                stack: '总量',#}
+{#                data: status_404_url#}
+{#            },#}
+{#            {#}
+{#                name: 'status_50x_url',#}
+{#                type: 'line',#}
+{#                stack: '总量',#}
+{#                data: status_50x_url#}
+{#            },#}
+{#            {#}
+{#                name: 'status_other_url',#}
+{#                type: 'line',#}
+{#                stack: '总量',#}
+{#                data: status_other_url#}
+{#            }#}
+{#        ]#}
+{##}
+{#    };#}
+{#      //初始化echarts实例#}
+{#        var myChart = echarts.init(document.getElementById('chart'));#}
+{##}
+{#        //使用制定的配置项和数据显示图表#}
+{#        myChart.setOption(option);#}
+{#    },#}
+{#       error:function(er){#}
+{#          //alert("11");#}
+{#           BackErr(er);#}
+{#     }#}
+{#    });#}
+{##}
+{#</script>#}
+{##}
+{#</body>#}
+{#</html>#}
+
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv=Content-Type content="text/html; charset=UTF-8"><title>政咨汇数据采集展示</title>
+    <meta name=Keywords content=Gerapy><meta name=Description content=Gerapy><meta name=renderer content=webkit>
+    <meta http-equiv=X-UA-Compatible content="IE=Edge,chrome=1">
+{#    <link rel="shortcut icon" href=/favicon.ico>#}
+{#    <link href=/static/css/e35e8a8a.css rel=stylesheet>#}
+    <script type="text/javascript" src="../static/js/echarts.js"></script>
+    <script type="text/javascript" src="http://apps.bdimg.com/libs/jquery/1.11.1/jquery.min.js"></script>
+
+</head>
+<body>
+{#<mainbody></mainbody>#}
+{#<script type=text/javascript src=/static/js/4381eaa1.js></script>#}
+{#<script type=text/javascript src=/static/js/e5ed2852.js></script>#}
+{#<script type=text/javascript src=/static/js/57be2686.js></script>#}
+<div  style="width:1000px; height: 500px;">
+    <div id="chartMapitem" style="width:300px; height: 500px;float: left"></div>
+    <div id="chartMapqueue" style="width:300px; height: 500px;float: left"></div>
+    <div id="chartMapspider" style="width:300px; height: 500px;float: left"></div>
+</div>
+<div id="chartmain" style="width:800px; height: 400px;"></div>
+<div>
+    <div style="float: left">
+        <input type="text" id="queue" value="2018-05-08"/>
+    </div>
+    <div id="chartqueue" style="width:800px; height: 400px;"></div>
+</div>
+<div id="clickequeue"><a href="{% url 'itemdata' %}">点击</a></div>
+<div id="chartspider" style="width:800px; height: 400px;"></div>
+{#<div id="chartma" style="width:1024px; height: 400px;"></div>#}
+{#<div id="chart" style="width:1000px; height: 400px;"></div>#}
+
+
+
+
+<script type="text/javascript">
+    // 按小时
+
+{#    var date = document.getElementById('queue').value();#}
+
+    $.ajax({
+
+       url: 'http://192.168.5.66:8000/api/monitor/queueMonitorDay/',
+{#    data:'{"startDay":"2018-05-09","hour":"14"}',#}
+        data:'{"startDay":"2018-05-14","hour":"14"}',
+    type: "POST",
+    dataType:'json',
+     success:function(data){
+      var total_queue_url = data.total_queue_url;
+      var  success_queue_url = data.success_queue_url;
+      var  fail_queue_url = data.fail_queue_url;
+      var  status_403_queue_url = data.status_403_queue_url;
+      var  status_404_queue_url = data.status_404_queue_url;
+      var  status_50x_queue_url = data.status_50x_queue_url;
+      var  status_other_queue_url = data.status_other_queue_url;
+        var myDate = new Date();
+      var h = myDate.getHours(); //{0，,23}
+     var option = {
+    title : {
+        text: '队列url展示',
+        subtext: '政咨汇',
+        x:'center'
+    },
+    tooltip : {
+        trigger: 'item',
+        formatter: "{a} <br/>{b} : {c} ({d}%)"
+    },
+    legend: {
+        orient: 'vertical',
+        left: 'right',
+        data: ['成功URL总数','失败URL总数','403数量','404数量','50x数量' , '其他数量']
+    },
+    series : [
+
+        {
+    name: '初始URL数据统计',
+    type: 'pie',
+    radius : '50%',
+    center: ['75%', '50%'],
+    data:[
+{#        {value:total_queue_url[h], name:'队列URL总数'},#}
+        {value:success_queue_url[h], name:'成功URL总数'},
+        {value:fail_queue_url[h], name:'失败URL总数'},
+        {value:status_403_queue_url[h], name:'403数量'},
+        {value:status_404_queue_url[h], name:'404数量'},
+        {value:status_50x_queue_url[h], name:'50x数量'},
+        {value:status_other_queue_url[h], name:'其他数量'}
+    ],
+    itemStyle: {
+        emphasis: {
+            shadowBlur: 10,
+            shadowOffsetX: 0,
+            shadowColor: 'rgba(0, 0, 0, 0.5)'
+        }
+    }
+}
+
+    ]
+};
+
+
+      //初始化echarts实例
+        var myChart = echarts.init(document.getElementById('chartMapqueue'));
+
+        //使用制定的配置项和数据显示图表
+        myChart.setOption(option);
+
+    },
+       error:function(er){
+          //alert("11");
+           BackErr(er);
+     }
+    });
+
+</script>
+
+<script>
+    // 按小时
+    $.ajax({
+       url: 'http://192.168.5.66:8000/api/monitor/spiderMonitorDay/',
+    data:'{"startDay":"2018-05-14","hour":"14"}',
+    type: "POST",
+    dataType:'json',
+     success:function(data){
+           console.log(data);
+      var  total_url = data.total_url;
+      var  success_url = data.success_url;
+      var  fail_url = data.fail_url;
+      var  status_403_url = data.status_403_url;
+      var  status_404_url = data.status_404_url;
+      var  status_50x_url = data.status_50x_url;
+      var  status_other_url = data.status_other_url;
+      var myDate = new Date();
+      var h = myDate.getHours(); //{0，,23}
+     var option = {
+    title : {
+        text: '详细url展示',
+        subtext: '政咨汇',
+        x:'center'
+    },
+    tooltip : {
+        trigger: 'item',
+        formatter: "{a} <br/>{b} : {c} ({d}%)"
+    },
+    legend: {
+        orient: 'vertical',
+        left: 'right',
+        data: ['成功url总数','失败url总数','403数量','404数量','50x数量','其他数量'
+        ]
+    },
+    series : [
+
+        {
+            name: 'url数据统计',
+            type: 'pie',
+            radius : '50%',
+            center: ['75%', '50%'],
+            data:[
+{#                {value:total_url[h], name:'url总数'},#}
+                {value:success_url[h], name:'成功数量'},
+                {value:fail_url[h], name:'失败数量'},
+                {value:status_403_url[h], name:'403数量'},
+                {value:status_404_url[h], name:'404数量'},
+                {value:status_50x_url[h], name:'50x数量'},
+                {value:status_other_url[h], name:'其他数量'}
+            ],
+            itemStyle: {
+                emphasis: {
+                    shadowBlur: 10,
+                    shadowOffsetX: 0,
+                    shadowColor: 'rgba(0, 0, 0, 0.5)'
+                }
+            }
+        }
+
+    ]
+};
+
+
+      //初始化echarts实例
+        var myChart = echarts.init(document.getElementById('chartMapspider'));
+
+        //使用制定的配置项和数据显示图表
+        myChart.setOption(option);
+
+    },
+       error:function(er){
+          //alert("11");
+           BackErr(er);
+     }
+    });
+
+</script>
+
+<script>
+    // 按小时
+
+    $.ajax({
+       url: 'http://192.168.5.66:8000/api/monitor/itemMonitorDay/',
+    data:'{"startDay":"2018-05-14","hour":"14"}',
+    type: "POST",
+    dataType:'json',
+     success:function(data) {
+         console.log(data);
+         var item_total = data.item_total;
+         var item_avail = data.item_avail;
+         var item_invalid = data.item_invalid;
+         var item_avail_increased = data.item_avail_increased;
+         var myDate = new Date();
+      var h = myDate.getHours(); //{0，,23}
+         var option = {
+             title: {
+                 text: '采集数据展示',
+                 subtext: '政咨汇',
+                 x: 'center'
+             },
+             tooltip: {
+                 trigger: 'item',
+                 formatter: "{a} <br/>{b} : {c} ({d}%)"
+             },
+             legend: {
+                 orient: 'vertical',
+                 left: 'right',
+                 data: [ '资金类', '非资金类', '有效增加'
+                 ]
+             },
+             series: [
+                 {
+                     name: 'item统计',
+                     type: 'pie',
+                     radius: '50%',
+                     center: ['25%', '50%'],
+                     data: [
+{#                         {value: item_total[h], name: '总数'},#}
+                         {value: item_avail[h], name: '资金类'},
+                         {value: item_invalid[h], name: '非资金类'},
+                         {value: item_avail_increased[h], name: '有效增加'}
+                     ],
+                     itemStyle: {
+                         emphasis: {
+                             shadowBlur: 10,
+                             shadowOffsetX: 0,
+                             shadowColor: 'rgba(0, 0, 0, 0.5)'
+                         }
+                     }
+                 }
+
+             ]
+         };
+
+
+         //初始化echarts实例
+         var myChart = echarts.init(document.getElementById('chartMapitem'));
+
+         //使用制定的配置项和数据显示图表
+         myChart.setOption(option);
+     },
+       error:function(er){
+          //alert("11");
+           BackErr(er);
+     }
+    });
+
+</script>
+
+
+
+<script>
+    // 按小时
+    $.ajax({
+       url: 'http://192.168.5.66:8000/api/monitor/itemMonitorDay/',
+    data:'{"startDay":"2018-05-14","hour":"13"}',
+    type: "POST",
+    dataType:'json',
+     success:function(data){
+           console.log(data);
+      var item_total = data.item_total;
+      var item_avail = data.item_avail;
+      var item_invalid = data.item_invalid;
+      var item_avail_increased = data.item_avail_increased;
+
+      var legenddata=['总数','资金类','非资金类','有效增加'];
+      var seriess=[{
+                name:'总数',
+                type:'line',
+                stack: '总量',
+                data:item_total
+            },
+            {
+                name:'资金类',
+                type:'line',
+                stack: '总量',
+                data:item_avail
+            },
+            {
+                name:'非资金类',
+                type:'line',
+                stack: '总量',
+                data:item_invalid
+            },
+            {
+                name: '有效增加',
+                type: 'line',
+                stack: '总量',
+                data: item_avail_increased
+            }];
+      var  option = {
+        tooltip : {
+            trigger: 'axis'
+        },
+        legend: {
+            data:legenddata
+        },
+        toolbox: {
+            show : true,
+            feature : {
+                mark : {show: true},
+                dataView : {show: true, readOnly: false},
+                magicType : {show: true, type: ['line', 'bar', 'stack', 'tiled']},
+                restore : {show: true},
+                saveAsImage : {show: true}
+            }
+        },
+        calculable : true,
+        xAxis : [
+            {
+                type : 'category',
+                boundaryGap : false,
+                data : ['00:00','01:00','02:00','03:00','04:00','05:00','06:00','07:00','08:00','09:00','10:00',
+                        '11:00','12:00','13:00','14:00','15:00','16:00','17:00','18:00','19:00','20:00','21:00','22:00',
+                        '23:00']
+            }
+        ],
+        yAxis : [
+            {
+                type : 'value'
+            }
+        ],
+        series : seriess
+
+    };
+      //初始化echarts实例
+        var myChart = echarts.init(document.getElementById('chartmain'));
+
+        //使用制定的配置项和数据显示图表
+        myChart.setOption(option);
+    },
+       error:function(er){
+          //alert("11");
+           BackErr(er);
+     }
+    });
+
+</script>
+
+<script>
+    // 按小时
+    $.ajax({
+       url: 'http://192.168.5.66:8000/api/monitor/queueMonitorDay/',
+    data:'{"startDay":"2018-05-14","hour":"13"}',
+    type: "POST",
+    dataType:'json',
+     success:function(data){
+           console.log(data);
+      var total_queue_url = data.total_queue_url;
+      var  success_queue_url = data.success_queue_url;
+      var  fail_queue_url = data.fail_queue_url;
+      var  status_403_queue_url = data.status_403_queue_url;
+      var  status_404_queue_url = data.status_404_queue_url;
+      var  status_50x_queue_url = data.status_50x_queue_url;
+      var  status_other_queue_url = data.status_other_queue_url;
+
+      var legenddata=['队列URL总数','成功URL总数','失败URL总数','403数量','404数量','50x数量' ,
+        '其他数量'];
+      var  option = {
+        tooltip : {
+            trigger: 'axis'
+        },
+        legend: {
+            data:legenddata
+        },
+        toolbox: {
+            show : true,
+            feature : {
+                mark : {show: true},
+                dataView : {show: true, readOnly: false},
+                magicType : {show: true, type: ['line', 'bar', 'stack', 'tiled']},
+                restore : {show: true},
+                saveAsImage : {show: true}
+            }
+        },
+        calculable : true,
+        xAxis : [
+            {
+                type : 'category',
+                boundaryGap : false,
+                data : ['00:00','01:00','02:00','03:00','04:00','05:00','06:00','07:00','08:00','09:00','10:00',
+                        '11:00','12:00','13:00','14:00','15:00','16:00','17:00','18:00','19:00','20:00','21:00','22:00',
+                        '23:00']
+            }
+        ],
+        yAxis : [
+            {
+                type : 'value'
+            }
+        ],
+        series : [
+            {
+                name: '队列URL总数',
+                type: 'line',
+                stack: '总量',
+                data: total_queue_url
+            },
+            {
+                name: '成功URL总数',
+                type: 'line',
+                stack: '总量',
+                data: success_queue_url
+            },
+            {
+                name: '失败URL总数',
+                type: 'line',
+                stack: '总量',
+                data: fail_queue_url
+            },
+            {
+                name: '403数量',
+                type: 'line',
+                stack: '总量',
+                data: status_403_queue_url
+            },
+            {
+                name: '404数量',
+                type: 'line',
+                stack: '总量',
+                data: status_404_queue_url
+            },
+            {
+                name: '50x数量',
+                type: 'line',
+                stack: '总量',
+                data: status_50x_queue_url
+            },
+            {
+                name: '其他数量',
+                type: 'line',
+                stack: '总量',
+                data: status_other_queue_url
+            }
+
+        ]
+
+    };
+      //初始化echarts实例
+        var myChart = echarts.init(document.getElementById('chartqueue'));
+
+        //使用制定的配置项和数据显示图表
+        myChart.setOption(option);
+    },
+       error:function(er){
+          //alert("11");
+           BackErr(er);
+     }
+
+    });
+
+</script>
+
+
+<script>
+    // 按小时
+    $.ajax({
+       url: 'http://192.168.5.66:8000/api/monitor/spiderMonitorDay/',
+    data:'{"startDay":"2018-05-14","hour":"13"}',
+    type: "POST",
+    dataType:'json',
+     success:function(data){
+           console.log(data);
+      var  total_url = data.total_url;
+      var  success_url = data.success_url;
+      var  fail_url = data.fail_url;
+      var  status_403_url = data.status_403_url;
+      var  status_404_url = data.status_404_url;
+      var  status_50x_url = data.status_50x_url;
+      var  status_other_url = data.status_other_url;
+
+      var legenddata=['url总数','成功url总数','失败url总数','403数量','404数量','50x数量','其他数量'];
+      var  option = {
+        tooltip : {
+            trigger: 'axis'
+        },
+        legend: {
+            data:legenddata
+        },
+        toolbox: {
+            show : true,
+            feature : {
+                mark : {show: true},
+                dataView : {show: true, readOnly: false},
+                magicType : {show: true, type: ['line', 'bar', 'stack', 'tiled']},
+                restore : {show: true},
+                saveAsImage : {show: true}
+            }
+        },
+        calculable : true,
+        xAxis : [
+            {
+                type : 'category',
+                boundaryGap : false,
+                data : ['00:00','01:00','02:00','03:00','04:00','05:00','06:00','07:00','08:00','09:00','10:00',
+                        '11:00','12:00','13:00','14:00','15:00','16:00','17:00','18:00','19:00','20:00','21:00','22:00',
+                        '23:00']
+            }
+        ],
+        yAxis : [
+            {
+                type : 'value'
+            }
+        ],
+        series : [
+            {
+                name: 'url总数',
+                type: 'line',
+                stack: '总量',
+                data: total_url
+            },
+            {
+                name: '成功url总数',
+                type: 'line',
+                stack: '总量',
+                data: success_url
+            },
+            {
+                name: '失败url总数',
+                type: 'line',
+                stack: '总量',
+                data: fail_url
+            },
+            {
+                name: '403数量',
+                type: 'line',
+                stack: '总量',
+                data: status_403_url
+            },
+            {
+                name: '404数量',
+                type: 'line',
+                stack: '总量',
+                data: status_404_url
+            },
+            {
+                name: '50x数量',
+                type: 'line',
+                stack: '总量',
+                data: status_50x_url
+            },
+            {
+                name: '其他数量',
+                type: 'line',
+                stack: '总量',
+                data: status_other_url
+            }
+
+        ]
+
+    };
+      //初始化echarts实例
+        var myChart = echarts.init(document.getElementById('chartspider'));
+{#        var clicke = echarts.init(document.getElementById('clickequeue'));#}
+        //使用制定的配置项和数据显示图表
+        myChart.setOption(option);
+        myChart.on("click", function (param){
+alert(param.dataIndex+':'+option1.series[0].data[param.dataIndex].name);
+});
+
+    },
+
+       error:function(er){
+          //alert("11");
+           BackErr(er);
+     }
+    });
+
+</script>
+
+
+
+</body>
+</html>

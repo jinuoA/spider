@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv=Content-Type content="text/html; charset=UTF-8"><title>政咨汇数据采集展示</title>
+    <meta name=Keywords content=Gerapy><meta name=Description content=Gerapy><meta name=renderer content=webkit>
+    <meta http-equiv=X-UA-Compatible content="IE=Edge,chrome=1">
+{#    <link rel="shortcut icon" href=/favicon.ico>#}
+{#    <link href=/static/css/e35e8a8a.css rel=stylesheet>#}
+    <link href="http://libs.baidu.com/bootstrap/3.0.3/css/bootstrap.min.css" rel="stylesheet"/>
+    <script type="text/javascript" src="../static/js/echarts.js"></script>
+    <script type="text/javascript" src="http://apps.bdimg.com/libs/jquery/1.11.1/jquery.min.js"></script>
+
+</head>
+<body>
+{#<mainbody></mainbody>#}
+{#<script type=text/javascript src=/static/js/4381eaa1.js></script>#}
+{#<script type=text/javascript src=/static/js/e5ed2852.js></script>#}
+{#<script type=text/javascript src=/static/js/57be2686.js></script>#}
+<div  style="height:500px;">
+    <div id="chartMapitem" style="width:30%; height: 500px;float: left"></div>
+    <div id="chartmain" style="width:70%; height: 400px;float: left"></div>
+</div>
+<div>
+    <table border="1" cellpadding="0" cellspacing="0">
+        <tr>
+            <td >增加数量:{{ total_data }}</td>
+        </tr>
+        <tr>
+            <td>dept_id</td>
+            <td>dept_name_key</td>+
+            <td>item_title</td>
+            <td>item_url</td>
+            <td>item_pulishdate</td>
+            <td>input_time</td>
+        </tr>
+        {% for a in avalidItemList %}
+        <tr >
+            <td>{{ a.dept_id }}</td>
+            <td>{{ a.dept_name_key }}</td>
+            <td><a href="{{ a.item_url }}">{{ a.item_title }}</a></td>
+            <td><a href="{{ a.item_url }}">{{ a.item_url }}</a></td>
+            <td>{{ a.item_pulishdate }}</td>
+            <td>{{ a.input_time|date:"Y-m-d" }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+    <ul class="pagination" id="pager">
+        {#上一页按钮开始#}
+        {# 如果当前页有上一页#}
+        {% if avalidItemList.has_previous %}
+            {#  当前页的上一页按钮正常使用#}
+            <li class="previous"><a href="/item_monitor_month?page={{ avalidItemList.previous_page_number }}">上一页</a></li>
+        {% else %}
+            {# 当前页的不存在上一页时,上一页的按钮不可用#}
+            <li class="previous disabled"><a href="#">上一页</a></li>
+        {% endif %}
+        {#上一页按钮结束#}
+        {# 页码开始#}
+        {% for num in paginator.page_range %}
+
+            {% if num == currentPage %}
+                <li class="item active"><a href="/?page={{ num }}">{{ num }}</a></li>
+            {% else %}
+                <li class="item"><a href="/?page={{ num }}">{{ num }}</a></li>
+
+            {% endif %}
+        {% endfor %}
+        {#页码结束#}
+        {# 下一页按钮开始#}
+        {% if avalidItemList.has_next %}
+            <li class="next"><a href="/item_monitor_month?page={{ avalidItemList.next_page_number }}">下一页</a></li>
+        {% else %}
+            <li class="next disabled"><a href="#">下一页</a></li>
+        {% endif %}
+        {# 下一页按钮结束#}
+    </ul>
+</div>
+{#<div>#}
+{#    <div style="float: left">#}
+{#        <input type="text" id="queue" value="2018-05-08"/>#}
+{#    </div>#}
+{#    <div id="chartqueue" style="width:800px; height: 400px;"></div>#}
+{#</div>#}
+{#<div id="clickequeue"><a href="{% url 'itemdata' %}">点击</a></div>#}
+{#<div id="chartspider" style="width:800px; height: 400px;"></div>#}
+{#<div id="chartma" style="width:1024px; height: 400px;"></div>#}
+{#<div id="chart" style="width:1000px; height: 400px;"></div>#}
+
+<script>
+    // 按小时
+
+    $.ajax({
+       url: 'http://192.168.5.66:8000/api/monitor/itemMonitorMonth/',
+    data:'{"year":"2018","month":"5"}',
+    type: "POST",
+    dataType:'json',
+     success:function(data) {
+         //console.log(data);
+         var item_total = data.item_total;
+         var item_avail = data.item_avail;
+         var item_invalid = data.item_invalid;
+         var item_avail_increased = data.item_avail_increased;
+         var myDate = new Date();
+      var h = myDate.getDate()-1; //{0，,23}
+         console.log(h);
+         var option = {
+             title: {
+                 text: '采集数据展示',
+                 subtext: '政咨汇',
+                 x: 'center'
+             },
+             tooltip: {
+                 trigger: 'item',
+                 formatter: "{a} <br/>{b} : {c} ({d}%)"
+             },
+             legend: {
+                 orient: 'vertical',
+                 left: 'right',
+                 data: [ '资金类', '非资金类', '有效增加'
+                 ]
+             },
+             series: [
+                 {
+                     name: 'item统计',
+                     type: 'pie',
+                     radius: '50%',
+                     center: ['25%', '50%'],
+                     data: [
+{#                         {value: item_total[h], name: '总数'},#}
+                         {value: item_avail[h], name: '资金类'},
+                         {value: item_invalid[h], name: '非资金类'},
+                         {value: item_avail_increased[h], name: '有效增加'}
+                     ],
+                     itemStyle: {
+                         emphasis: {
+                             shadowBlur: 10,
+                             shadowOffsetX: 0,
+                             shadowColor: 'rgba(0, 0, 0, 0.5)'
+                         }
+                     }
+                 }
+
+             ]
+         };
+
+
+         //初始化echarts实例
+         var myChart = echarts.init(document.getElementById('chartMapitem'));
+
+         //使用制定的配置项和数据显示图表
+         myChart.setOption(option);
+     },
+       error:function(er){
+          //alert("11");
+           BackErr(er);
+     }
+    });
+
+</script>
+
+<script>
+    // 按小时
+    $.ajax({
+       url: 'http://192.168.5.66:8000/api/monitor/itemMonitorMonth/',
+    data:'{"year":"2018","month":"5"}',
+    type: "POST",
+    dataType:'json',
+     success:function(data){
+           //console.log(data);
+      var item_total = data.item_total;
+      var item_avail = data.item_avail;
+      var item_invalid = data.item_invalid;
+      var item_avail_increased = data.item_avail_increased;
+
+      var legenddata=['总数','资金类','非资金类','有效增加'];
+      var seriess=[{
+                name:'总数',
+                type:'line',
+                stack: '总量',
+                data:item_total
+            },
+            {
+                name:'资金类',
+                type:'line',
+                stack: '总量',
+                data:item_avail
+            },
+            {
+                name:'非资金类',
+                type:'line',
+                stack: '总量',
+                data:item_invalid
+            },
+            {
+                name: '有效增加',
+                type: 'line',
+                stack: '总量',
+                data: item_avail_increased
+            }];
+      var  option = {
+        tooltip : {
+            trigger: 'axis'
+        },
+        legend: {
+            data:legenddata
+        },
+        toolbox: {
+            show : true,
+            feature : {
+                mark : {show: true},
+                dataView : {show: true, readOnly: false},
+                magicType : {show: true, type: ['line', 'bar', 'stack', 'tiled']},
+                restore : {show: true},
+                saveAsImage : {show: true}
+            }
+        },
+        calculable : true,
+        xAxis : [
+            {
+                type : 'category',
+                boundaryGap : false,
+                data : ['1','2','3','4','5','6','7','8','9','10','11',
+                        '12','13','14','15','16','17','18','19','20','21','22','23',
+                        '24','25','26','27','28','29','30','31']
+            }
+        ],
+        yAxis : [
+            {
+                type : 'value'
+            }
+        ],
+        series : seriess
+
+    };
+      //初始化echarts实例
+        var myChart = echarts.init(document.getElementById('chartmain'));
+
+        //使用制定的配置项和数据显示图表
+        myChart.setOption(option);
+    },
+       error:function(er){
+          //alert("11");
+           BackErr(er);
+     }
+    });
+</script>
+</body>
+</html>

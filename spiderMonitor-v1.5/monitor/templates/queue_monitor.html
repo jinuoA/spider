@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv=Content-Type content="text/html; charset=UTF-8"><title>政咨汇数据采集展示</title>
+    <meta name=Keywords content=Gerapy><meta name=Description content=Gerapy><meta name=renderer content=webkit>
+    <meta http-equiv=X-UA-Compatible content="IE=Edge,chrome=1">
+{#    <link rel="shortcut icon" href=/favicon.ico>#}
+{#    <link href=/static/css/e35e8a8a.css rel=stylesheet>#}
+        <link href="http://libs.baidu.com/bootstrap/3.0.3/css/bootstrap.min.css" rel="stylesheet"/>
+    <script type="text/javascript" src="../static/js/echarts.js"></script>
+    <script type="text/javascript" src="http://apps.bdimg.com/libs/jquery/1.11.1/jquery.min.js"></script>
+
+</head>
+<body>
+<div  style="height: 500px;">
+    <div id="chartMapqueue" style="width:30%; height: 500px;float: left"></div>
+    <div id="chartqueue" style="width:70%; height: 400px;float: left;"></div>
+</div>
+<div>
+    <div >
+        <a href="/download" id="getDownLoad">点击下载</a>
+        <a href="/download/fail/url" id="getDownLoad">点击下载失败url</a>
+    </div>
+    <div style="height: 800px">
+    <table border="1" cellpadding="0" cellspacing="0">
+        <tr>
+            <td >增加数量:{{ total_queue_fail_data }}</td>
+        </tr>
+        <tr>
+            <td>project_desc</td>
+            <td>queue_url</td>
+            <td>spider_url</td>
+            <td>status_code</td>
+            <td>dept_id</td>
+            <td>dept_name_key</td>
+            <td>save_time</td>
+
+        </tr>
+        {% for a,b in failList %}
+        <tr >
+            <td>{{ b }}</td>
+            <td><a href="{{ a.queue_url }}">{{ a.queue_url }}</a></td>
+            <td><a href="{{ a.spider_url }}">{{ a.spider_url }}</a></td>
+            <td>{{ a.status_code }}</td>
+            <td>{{ a.dept_id }}</td>
+            <td>{{ a.dept_name_key }}</td>
+            <td>{{ a.save_time|date:"Y-m-d H:i:s" }}</td>
+
+        </tr>
+        {% endfor %}
+    </table>
+    <ul class="pagination" id="pager">
+        {#上一页按钮开始#}
+        {# 如果当前页有上一页#}
+        {% if failUrlList.has_previous %}
+            {#  当前页的上一页按钮正常使用#}
+            <li class="previous"><a href="/queue_monitor?page={{ failUrlList.previous_page_number }}">上一页</a></li>
+        {% else %}
+            {# 当前页的不存在上一页时,上一页的按钮不可用#}
+            <li class="previous disabled"><a href="#">上一页</a></li>
+        {% endif %}
+        {#上一页按钮结束#}
+        {# 页码开始#}
+        {% for num in paginator.page_range %}
+
+            {% if num == currentPage %}
+                <li class="item active"><a href="/?page={{ num }}">{{ num }}</a></li>
+            {% else %}
+                <li class="item"><a href="/?page={{ num }}">{{ num }}</a></li>
+
+            {% endif %}
+        {% endfor %}
+        {#页码结束#}
+        {# 下一页按钮开始#}
+        {% if failUrlList.has_next %}
+            <li class="next"><a href="/queue_monitor?page={{ failUrlList.next_page_number }}">下一页</a></li>
+        {% else %}
+            <li class="next disabled"><a href="#">下一页</a></li>
+        {% endif %}
+        {# 下一页按钮结束#}
+    </ul>
+</div>
+
+
+<script type="text/javascript">
+    // 按小时
+
+{#    var date = document.getElementById('queue').value();#}
+
+    $.ajax({
+
+       url: 'http://192.168.5.66:8000/api/monitor/queueMonitorDay/',
+{#    data:'{"startDay":"2018-05-09","hour":"14"}',#}
+        data:'{"startDay":"2018-05-15","hour":"14"}',
+    type: "POST",
+    dataType:'json',
+     success:function(data){
+      var total_queue_url = data.total_queue_url;
+      var  success_queue_url = data.success_queue_url;
+      var  fail_queue_url = data.fail_queue_url;
+      var  status_403_queue_url = data.status_403_queue_url;
+      var  status_404_queue_url = data.status_404_queue_url;
+      var  status_50x_queue_url = data.status_50x_queue_url;
+      var  status_other_queue_url = data.status_other_queue_url;
+        var myDate = new Date();
+      var h = myDate.getHours(); //{0，,23}
+     var option = {
+    title : {
+        text: '队列url展示',
+        subtext: '政咨汇',
+        x:'center'
+    },
+    tooltip : {
+        trigger: 'item',
+        formatter: "{a} <br/>{b} : {c} ({d}%)"
+    },
+    legend: {
+        orient: 'vertical',
+        left: 'right',
+        data: ['成功URL总数','失败URL总数','403数量','404数量','50x数量' , '其他数量']
+    },
+    series : [
+
+        {
+    name: '初始URL数据统计',
+    type: 'pie',
+    radius : '50%',
+    center: ['75%', '50%'],
+    data:[
+{#        {value:total_queue_url[h], name:'队列URL总数'},#}
+        {value:success_queue_url[h], name:'成功URL总数'},
+        {value:fail_queue_url[h], name:'失败URL总数'},
+        {value:status_403_queue_url[h], name:'403数量'},
+        {value:status_404_queue_url[h], name:'404数量'},
+        {value:status_50x_queue_url[h], name:'50x数量'},
+        {value:status_other_queue_url[h], name:'其他数量'}
+    ],
+    itemStyle: {
+        emphasis: {
+            shadowBlur: 10,
+            shadowOffsetX: 0,
+            shadowColor: 'rgba(0, 0, 0, 0.5)'
+        }
+    }
+}
+
+    ]
+};
+
+
+      //初始化echarts实例
+        var myChart = echarts.init(document.getElementById('chartMapqueue'));
+
+        //使用制定的配置项和数据显示图表
+        myChart.setOption(option);
+
+    },
+       error:function(er){
+          //alert("11");
+           BackErr(er);
+     }
+    });
+
+</script>
+
+
+<script>
+    // 按小时
+    $.ajax({
+       url: 'http://192.168.5.66:8000/api/monitor/queueMonitorDay/',
+    data:'{"startDay":"2018-05-15","hour":"13"}',
+    type: "POST",
+    dataType:'json',
+     success:function(data){
+           console.log(data);
+      var total_queue_url = data.total_queue_url;
+      var  success_queue_url = data.success_queue_url;
+      var  fail_queue_url = data.fail_queue_url;
+      var  status_403_queue_url = data.status_403_queue_url;
+      var  status_404_queue_url = data.status_404_queue_url;
+      var  status_50x_queue_url = data.status_50x_queue_url;
+      var  status_other_queue_url = data.status_other_queue_url;
+
+      var legenddata=['队列URL总数','成功URL总数','失败URL总数','403数量','404数量','50x数量' ,
+        '其他数量'];
+      var  option = {
+        tooltip : {
+            trigger: 'axis'
+        },
+        legend: {
+            data:legenddata
+        },
+        toolbox: {
+            show : true,
+            feature : {
+                mark : {show: true},
+                dataView : {show: true, readOnly: false},
+                magicType : {show: true, type: ['line', 'bar', 'stack', 'tiled']},
+                restore : {show: true},
+                saveAsImage : {show: true}
+            }
+        },
+        calculable : true,
+        xAxis : [
+            {
+                type : 'category',
+                boundaryGap : false,
+                data : ['00:00','01:00','02:00','03:00','04:00','05:00','06:00','07:00','08:00','09:00','10:00',
+                        '11:00','12:00','13:00','14:00','15:00','16:00','17:00','18:00','19:00','20:00','21:00','22:00',
+                        '23:00']
+            }
+        ],
+        yAxis : [
+            {
+                type : 'value'
+            }
+        ],
+        series : [
+            {
+                name: '队列URL总数',
+                type: 'line',
+                stack: '总量',
+                data: total_queue_url
+            },
+            {
+                name: '成功URL总数',
+                type: 'line',
+                stack: '总量',
+                data: success_queue_url
+            },
+            {
+                name: '失败URL总数',
+                type: 'line',
+                stack: '总量',
+                data: fail_queue_url
+            },
+            {
+                name: '403数量',
+                type: 'line',
+                stack: '总量',
+                data: status_403_queue_url
+            },
+            {
+                name: '404数量',
+                type: 'line',
+                stack: '总量',
+                data: status_404_queue_url
+            },
+            {
+                name: '50x数量',
+                type: 'line',
+                stack: '总量',
+                data: status_50x_queue_url
+            },
+            {
+                name: '其他数量',
+                type: 'line',
+                stack: '总量',
+                data: status_other_queue_url
+            }
+
+        ]
+
+    };
+      //初始化echarts实例
+        var myChart = echarts.init(document.getElementById('chartqueue'));
+
+        //使用制定的配置项和数据显示图表
+        myChart.setOption(option);
+    },
+       error:function(er){
+          //alert("11");
+           BackErr(er);
+     }
+
+    });
+
+</script>
+
+
+
+
+
+</body>
+</html>

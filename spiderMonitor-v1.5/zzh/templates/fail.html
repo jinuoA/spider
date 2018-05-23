@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv=Content-Type content="text/html; charset=UTF-8"><title>政咨汇数据采集展示</title>
+    <meta name=Keywords content=Gerapy><meta name=Description content=Gerapy><meta name=renderer content=webkit>
+    <meta http-equiv=X-UA-Compatible content="IE=Edge,chrome=1">
+{#    <link rel="shortcut icon" href=/favicon.ico>#}
+{#    <link href=/static/css/e35e8a8a.css rel=stylesheet>#}
+    <link href="http://libs.baidu.com/bootstrap/3.0.3/css/bootstrap.min.css" rel="stylesheet"/>
+    <script type="text/javascript" src="http://apps.bdimg.com/libs/jquery/1.11.1/jquery.min.js"></script>
+
+</head>
+<body>
+    <div >
+        <a href="/download" id="getDownLoad">点击下载</a>
+        <a href="/download/fail/url" id="getDownLoad">点击下载失败url</a>
+    </div>
+    <div style="height: 800px">
+    <table border="1" cellpadding="0" cellspacing="0">
+        <tr>
+            <td >增加数量:{{ total_fail_data }}</td>
+        </tr>
+        <tr>
+            <td>project_desc</td>
+            <td>queue_url</td>
+            <td>spider_url</td>
+            <td>status_code</td>
+            <td>dept_id</td>
+            <td>dept_name_key</td>
+            <td>save_time</td>
+
+        </tr>
+        {% for a,b in failList %}
+            {% ifequal a.status_code '404' %}
+        <tr style="color: red;font-size: large">
+            <td>{{ b }}</td>
+            <td><a href="{{ a.queue_url }}">{{ a.queue_url }}</a></td>
+            <td><a href="{{ a.spider_url }}">{{ a.spider_url }}</a></td>
+            <td>{{ a.status_code }}</td>
+            <td>{{ a.dept_id }}</td>
+            <td>{{ a.dept_name_key }}</td>
+            <td>{{ a.save_time|date:"Y-m-d" }}</td>
+        </tr>
+             {% else %}
+        <tr>
+            <td>{{ b }}</td>
+            <td><a href="{{ a.queue_url }}">{{ a.queue_url }}</a></td>
+            <td><a href="{{ a.spider_url }}">{{ a.spider_url }}</a></td>
+            <td>{{ a.status_code }}</td>
+            <td>{{ a.dept_id }}</td>
+            <td>{{ a.dept_name_key }}</td>
+            <td>{{ a.save_time|date:"Y-m-d" }}</td>
+        </tr>
+            {% endifequal %}
+        {% endfor %}
+    </table>
+    <ul class="pagination" id="pager">
+        {#上一页按钮开始#}
+        {# 如果当前页有上一页#}
+        {% if failUrlList.has_previous %}
+            {#  当前页的上一页按钮正常使用#}
+            <li class="previous"><a href="/fail/url?page={{ failUrlList.previous_page_number }}">上一页</a></li>
+        {% else %}
+            {# 当前页的不存在上一页时,上一页的按钮不可用#}
+            <li class="previous disabled"><a href="#">上一页</a></li>
+        {% endif %}
+        {#上一页按钮结束#}
+        {# 页码开始#}
+        {% for num in paginator.page_range %}
+
+            {% if num == currentPage %}
+                <li class="item active"><a href="/?page={{ num }}">{{ num }}</a></li>
+            {% else %}
+                <li class="item"><a href="/?page={{ num }}">{{ num }}</a></li>
+
+            {% endif %}
+        {% endfor %}
+        {#页码结束#}
+        {# 下一页按钮开始#}
+        {% if failUrlList.has_next %}
+            <li class="next"><a href="/fail/url?page={{ failUrlList.next_page_number }}">下一页</a></li>
+        {% else %}
+            <li class="next disabled"><a href="#">下一页</a></li>
+        {% endif %}
+        {# 下一页按钮结束#}
+    </ul>
+</div>
+
+</body>
+</html>

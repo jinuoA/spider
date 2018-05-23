@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv=Content-Type content="text/html; charset=UTF-8"><title>政咨汇数据采集展示</title>
+    <meta name=Keywords content=Gerapy><meta name=Description content=Gerapy><meta name=renderer content=webkit>
+    <meta http-equiv=X-UA-Compatible content="IE=Edge,chrome=1">
+{#    <link rel="shortcut icon" href=/favicon.ico>#}
+{#    <link href=/static/css/e35e8a8a.css rel=stylesheet>#}
+    <script type="text/javascript" src="../static/js/echarts.js"></script>
+    <script type="text/javascript" src="http://apps.bdimg.com/libs/jquery/1.11.1/jquery.min.js"></script>
+
+</head>
+<body>
+{#<mainbody></mainbody>#}
+{#<script type=text/javascript src=/static/js/4381eaa1.js></script>#}
+{#<script type=text/javascript src=/static/js/e5ed2852.js></script>#}
+{#<script type=text/javascript src=/static/js/57be2686.js></script>#}
+<div  style=" height: 500px;">
+    <div id="chartMapspider" style="width:30%; height: 500px;float: left"></div>
+    <div id="chartspider" style="width:70%; height: 400px;float: left"></div>
+
+</div>
+
+
+
+
+
+<script>
+    // 按小时
+    $.ajax({
+       url: 'http://192.168.5.66:8000/api/monitor/spiderMonitorDay/',
+    data:'{"startDay":"2018-05-14","hour":"14"}',
+    type: "POST",
+    dataType:'json',
+     success:function(data){
+           console.log(data);
+      var  total_url = data.total_url;
+      var  success_url = data.success_url;
+      var  fail_url = data.fail_url;
+      var  status_403_url = data.status_403_url;
+      var  status_404_url = data.status_404_url;
+      var  status_50x_url = data.status_50x_url;
+      var  status_other_url = data.status_other_url;
+      var myDate = new Date();
+      var h = myDate.getHours(); //{0，,23}
+     var option = {
+    title : {
+        text: '详细url展示',
+        subtext: '政咨汇',
+        x:'center'
+    },
+    tooltip : {
+        trigger: 'item',
+        formatter: "{a} <br/>{b} : {c} ({d}%)"
+    },
+    legend: {
+        orient: 'vertical',
+        left: 'right',
+        data: ['成功url总数','失败url总数','403数量','404数量','50x数量','其他数量'
+        ]
+    },
+    series : [
+
+        {
+            name: 'url数据统计',
+            type: 'pie',
+            radius : '50%',
+            center: ['75%', '50%'],
+            data:[
+{#                {value:total_url[h], name:'url总数'},#}
+                {value:success_url[h], name:'成功数量'},
+                {value:fail_url[h], name:'失败数量'},
+                {value:status_403_url[h], name:'403数量'},
+                {value:status_404_url[h], name:'404数量'},
+                {value:status_50x_url[h], name:'50x数量'},
+                {value:status_other_url[h], name:'其他数量'}
+            ],
+            itemStyle: {
+                emphasis: {
+                    shadowBlur: 10,
+                    shadowOffsetX: 0,
+                    shadowColor: 'rgba(0, 0, 0, 0.5)'
+                }
+            }
+        }
+
+    ]
+};
+
+
+      //初始化echarts实例
+        var myChart = echarts.init(document.getElementById('chartMapspider'));
+
+        //使用制定的配置项和数据显示图表
+        myChart.setOption(option);
+
+    },
+       error:function(er){
+          //alert("11");
+           BackErr(er);
+     }
+    });
+
+</script>
+
+
+
+
+
+
+<script>
+    // 按小时
+    $.ajax({
+       url: 'http://192.168.5.66:8000/api/monitor/spiderMonitorDay/',
+    data:'{"startDay":"2018-05-14","hour":"13"}',
+    type: "POST",
+    dataType:'json',
+     success:function(data){
+           console.log(data);
+      var  total_url = data.total_url;
+      var  success_url = data.success_url;
+      var  fail_url = data.fail_url;
+      var  status_403_url = data.status_403_url;
+      var  status_404_url = data.status_404_url;
+      var  status_50x_url = data.status_50x_url;
+      var  status_other_url = data.status_other_url;
+
+      var legenddata=['url总数','成功url总数','失败url总数','403数量','404数量','50x数量','其他数量'];
+      var  option = {
+        tooltip : {
+            trigger: 'axis'
+        },
+        legend: {
+            data:legenddata
+        },
+        toolbox: {
+            show : true,
+            feature : {
+                mark : {show: true},
+                dataView : {show: true, readOnly: false},
+                magicType : {show: true, type: ['line', 'bar', 'stack', 'tiled']},
+                restore : {show: true},
+                saveAsImage : {show: true}
+            }
+        },
+        calculable : true,
+        xAxis : [
+            {
+                type : 'category',
+                boundaryGap : false,
+                data : ['00:00','01:00','02:00','03:00','04:00','05:00','06:00','07:00','08:00','09:00','10:00',
+                        '11:00','12:00','13:00','14:00','15:00','16:00','17:00','18:00','19:00','20:00','21:00','22:00',
+                        '23:00']
+            }
+        ],
+        yAxis : [
+            {
+                type : 'value'
+            }
+        ],
+        series : [
+            {
+                name: 'url总数',
+                type: 'line',
+                stack: '总量',
+                data: total_url
+            },
+            {
+                name: '成功url总数',
+                type: 'line',
+                stack: '总量',
+                data: success_url
+            },
+            {
+                name: '失败url总数',
+                type: 'line',
+                stack: '总量',
+                data: fail_url
+            },
+            {
+                name: '403数量',
+                type: 'line',
+                stack: '总量',
+                data: status_403_url
+            },
+            {
+                name: '404数量',
+                type: 'line',
+                stack: '总量',
+                data: status_404_url
+            },
+            {
+                name: '50x数量',
+                type: 'line',
+                stack: '总量',
+                data: status_50x_url
+            },
+            {
+                name: '其他数量',
+                type: 'line',
+                stack: '总量',
+                data: status_other_url
+            }
+
+        ]
+
+    };
+      //初始化echarts实例
+        var myChart = echarts.init(document.getElementById('chartspider'));
+{#        var clicke = echarts.init(document.getElementById('clickequeue'));#}
+        //使用制定的配置项和数据显示图表
+        myChart.setOption(option);
+        myChart.on("click", function (param){
+alert(param.dataIndex+':'+option1.series[0].data[param.dataIndex].name);
+});
+
+    },
+
+       error:function(er){
+          //alert("11");
+           BackErr(er);
+     }
+    });
+
+</script>
+
+
+
+</body>
+</html>
