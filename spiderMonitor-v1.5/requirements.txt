@@ -125,7 +125,7 @@ python-redis-lock==3.2.0
 python-scrapyd-api==2.0.1
 pytz==2017.2
 pywin32==221
-PyYAML==3.12
+PyYAML==5.4
 queuelib==1.4.2
 redis==2.10.5
 reportlab==3.4.0
