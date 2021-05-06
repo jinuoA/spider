@@ -50,7 +50,7 @@ ExtensionClass==4.3.0
 first==2.0.1
 Flask==0.12
 Flask-BasicAuth==0.2.0
-Flask-Cors==3.0.3
+Flask-Cors==3.0.9
 Flask-JWT-Extended==3.7.1
 Flask-Login==0.4.0
 Flask-Mail==0.9.1
