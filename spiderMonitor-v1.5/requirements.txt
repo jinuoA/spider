@@ -164,7 +164,7 @@ typing==3.6.2
 tzlocal==1.3
 u-msgpack-python==2.4.1
 ujson==1.35
-urllib3==1.22
+urllib3==1.26.5
 validate-email==1.3
 vboxapi==1.0
 virtualenv==15.1.0
