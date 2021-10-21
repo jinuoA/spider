@@ -9,7 +9,7 @@ asn1crypto==0.24.0
 attrs==16.3.0
 AuthEncoding==4.0.0
 Automat==0.6.0
-Babel==2.5.1
+Babel==2.9.1
 backports-abc==0.5
 backports.ssl-match-hostname==3.5.0.1
 beautifulsoup4==4.6.0
