@@ -61,7 +61,7 @@ funcsigs==1.0.2
 functools32==3.2.3.post2
 future==0.16.0
 futures==3.2.0
-gerapy==0.7.7
+gerapy==0.9.8
 gi==1.2
 gunicorn==19.7.1
 hyperlink==17.3.1
