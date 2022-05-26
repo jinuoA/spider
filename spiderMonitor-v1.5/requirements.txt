@@ -159,7 +159,7 @@ tqdm==4.19.5
 transaction==2.1.2
 trollius==2.1
 twine==1.9.1
-Twisted==17.1.0
+Twisted==22.4.0
 typing==3.6.2
 tzlocal==1.3
 u-msgpack-python==2.4.1
