@@ -128,7 +128,7 @@ pywin32==221
 PyYAML==3.12
 queuelib==1.4.2
 redis==2.10.5
-reportlab==3.4.0
+reportlab==3.5.55
 requests==2.13.0
 requests-file==1.4.1
 requests-toolbelt==0.8.0
