@@ -18,7 +18,7 @@ blinker==1.4
 BTrees==4.4.1
 bumpversion==0.5.3
 captcha==0.2.4
-certifi==2017.7.27.1
+certifi==2022.12.7
 cffi==1.9.1
 Chameleon==3.2
 characteristic==14.3.0
